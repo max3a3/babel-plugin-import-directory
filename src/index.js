@@ -74,11 +74,14 @@ export default function dir (babel) {
 
         if (!files.length) { return }
 
-        const imports = files.map(([file, fileName, fileUid]) =>
-          t.importDeclaration(
-            [t.importNamespaceSpecifier(fileUid)],
-            t.stringLiteral(pathPrefix + _path.join(cleanedPath, ...file))
-          )
+        const imports = files.map(([file, fileName, fileUid]) => {
+            var requirePath = _path.join(cleanedPath, ...file)
+           requirePath = requirePath.replace('\\','/') // windows fix
+           return t.importDeclaration(
+              [t.importNamespaceSpecifier(fileUid)],
+              t.stringLiteral(pathPrefix + requirePath)
+            )
+          }
         )
 
         let dirVar = path.scope.generateUidIdentifier('dirImport')
